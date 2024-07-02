@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Home Page</title>
+</head>
+<body>
+	<div>
+		<a th:href="@{/registrazioneutente}">Registrazione Utente</a>
+		<a th:href="@{/loginutente}">Area Riservata</a>
+	</div>
+	<table>
+		<tr th:each="libro : ${libri}">
+			<td th:text="${libro.titolo}">Titolo Libro</td>
+			<td th:text="${#numbers.formatDecimal(libro.prezzo,0,'POINT',2,'COMMA')}">Prezzo Libro</td>
+			<td th:text="${libro.categoria.descrizione}">Categoria Libro</td>
+			<td th:text="${libro.autore.nome} + ' ' + ${libro.autore.cognome}">Autore Libro</td>
+			<td>
+				<a th:href="@{/dettaglio(id=${libro.id})}">Dettaglio Libro</a>
+			</td>
+		</tr>
+	</table>
+	<script th:if="${registrato != null}">
+		document.addEventListener("DOMContentLoaded", function(){
+			alert("[[${registrato}]]")
+		});
+	</script>
+</body>
+</html>

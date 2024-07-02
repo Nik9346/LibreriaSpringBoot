@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Dettaglio Libro</title>
+</head>
+<body>
+	<a th:href="@{/}">Torna a catalogo</a>
+	<h2  th:text="${libro.titolo}">Titolo del libro</h2>
+	<h3 th:text="${#numbers.formatDecimal(libro.prezzo,0,'POINT',2,'COMMA')}">Prezzo del libro</h3>
+	<ul>
+		<li th:text="${libro.categoria.descrizione}">Categoria del libro</li>
+		<li th:text="${libro.autore.nome} + ' ' + ${libro.autore.cognome}">Autore del libro</li> 
+	</ul>
+</body>
+</html>
