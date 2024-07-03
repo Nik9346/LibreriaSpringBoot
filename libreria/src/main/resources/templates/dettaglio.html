@@ -12,5 +12,11 @@
 		<li th:text="${libro.categoria.descrizione}">Categoria del libro</li>
 		<li th:text="${libro.autore.nome} + ' ' + ${libro.autore.cognome}">Autore del libro</li> 
 	</ul>
+	<div th:if="${libro.quantita > 0}">
+		<a th:if=${isLog} th:href="@{/dettaglio/compra(id=${libro.id})}">Aggiungi al Carrello</a>
+		<a th:if="${!isLog}" th:href="@{/loginutente}">Clicca qui per loggarti e iniziare ad acquistare</a>		
+	</div>
+	<p th:if="${risultato != null}" th:text="${risultato.equals('ok') ? 'Libro aggiunto' : 'Libro già presente'}" th:style="${risultato.equals('ok') ? 'color:green' : 'color:red'}">
+	</p>
 </body>
 </html>

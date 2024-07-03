@@ -1,7 +1,6 @@
 package it.corso.model;
 
 import java.time.LocalDate;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,9 +12,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -33,15 +31,17 @@ public class Ordine {
 	@ManyToOne(cascade = CascadeType.REFRESH) // lato di partenza della foreign key // refresh in quanto andiamo ad aggiornare i dati, nel momento in cui eliminiamo l'ordine non tocchiamo anagrafica cliente
 	@JoinColumn(name = "id_utente", referencedColumnName = "id")
 	private Utente utente;
+	
+	@OneToMany(mappedBy = "ordine", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true) // tutto quello che riguarda un ordine riguarda anche la conseguente lista di libri ordinati
+	private List<LibroOrdinato> libriordinati = new ArrayList<>();
 
-	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable
-	(
-			name = "ordini_libri",//nome esatto della tabella di join
-			joinColumns = @JoinColumn(name = "id_ordine", referencedColumnName = "id"), //primo lato della tabella di join
-			inverseJoinColumns = @JoinColumn(name="id_libro", referencedColumnName = "id")  //altro lato della tabella di join
-			)
-	private List<Libro> libri = new ArrayList<>();
+	public List<LibroOrdinato> getLibriordinati() {
+		return libriordinati;
+	}
+
+	public void setLibriordinati(List<LibroOrdinato> libriordinati) {
+		this.libriordinati = libriordinati;
+	}
 
 	public int getId() {
 		return id;
@@ -75,11 +75,4 @@ public class Ordine {
 		this.utente = utente;
 	}
 
-	public List<Libro> getLibri() {
-		return libri;
-	}
-
-	public void setLibri(List<Libro> libri) {
-		this.libri = libri;
-	}
 }

@@ -5,11 +5,11 @@
 	<title>Login Utente</title>
 </head>
 <body>
-	<p th:if="${erroe != null}" th:text="${errore}" style="color:red;"></p>
+	<p th:if="${errore != null}" th:text="${errore}" style="color:red;"></p>
 	<form action="/loginutente" method="post">
 		<input type="text" name="username" required>
 		<br>
-		<input type="text" name="password" required>
+		<input type="password" name="password" required>
 		<br>
 		<input type="submit" value="Accedi">
 	</form>
