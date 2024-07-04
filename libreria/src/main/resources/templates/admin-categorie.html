@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Gestione Categorie</title>
+</head>
+<body>
+	<a th:href="@{/admindash}"> Torna a Dashboard</a>
+	<table>
+		<tr th:each="categoria : ${categorie}">
+			<td th:text="${categoria.descrizione}"></td>
+			<td><a th:href="@{/admincategorie(id=${categoria.id})}">Modifica</a> 
+			<a th:href="@{/admincategorie/elimina(id=${categoria.id})}">Elimina</a>
+			</td>
+		</tr>
+	</table>
+	<hr>
+	<form th:object="${categoria}" method="post">
+		<input type="text" th:field="*{descrizione}"> <br> <input
+			type="submit" value="Registra">
+	</form>
+</body>
+</html>

@@ -8,9 +8,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import it.corso.model.Utente;
 import it.corso.service.LibroOrdinatoService;
+import it.corso.service.OrdineService;
 import it.corso.service.UtenteService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -25,6 +28,9 @@ public class RiservataUtenteController
 	@Autowired
 	private LibroOrdinatoService libroOrdinatoService;
 	
+	@Autowired
+	private OrdineService ordineService;
+	
 	@GetMapping
 	public String getPage(HttpSession session, Model model) {
 		if(session.getAttribute("utente") == null)
@@ -32,6 +38,7 @@ public class RiservataUtenteController
 		Utente utente = (Utente) session.getAttribute("utente"); //recuperiamo un object quindi dobbiamo castare a utente
 		model.addAttribute("utente",utente);
 		model.addAttribute("carrello", libroOrdinatoService.getCarrello(session));
+		model.addAttribute("totale", libroOrdinatoService.getTotaleCarrello(session));
 		return "riservatautente";
 	}
 	
@@ -48,6 +55,24 @@ public class RiservataUtenteController
 			return "riservatautente";
 		utenteService.registraUtente(utente);
 		session.setAttribute("utente", utente);
+		return "redirect:/riservatautente";
+	}
+	
+	@GetMapping("/rimuovi")
+	public String rimuoviLibro(@RequestParam("id") int idLibro, HttpSession session) {
+		libroOrdinatoService.rimozioneLibro(idLibro, session);
+		return "redirect:/riservatautente";
+	}
+	
+	@PostMapping("/modifica")
+	@ResponseBody  //ci serve per fare in modo che quello ritornato dal metodo sia il corpo della risposta
+	public String modificaQuantita(@RequestParam("id") int idLibro, @RequestParam("quantita") int quantita, HttpSession session) {
+		return libroOrdinatoService.modificaQuantita(idLibro, quantita, session);
+	}
+	
+	@GetMapping("/invia")
+	public String inviaOrdine(HttpSession session) {
+		ordineService.inviaOrdine(session);
 		return "redirect:/riservatautente";
 	}
 }

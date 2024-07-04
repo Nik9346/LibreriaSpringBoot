@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Area Riservata</title>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 </head>
 <body>
 	<div>
@@ -33,11 +34,20 @@
 			<tr th:each="item : ${carrello}">
 				<td th:text="${item.libro.titolo}"></td>
 				<td th:text="${item.libro.prezzo}"></td>
-				<td th:text="${item.quantita}"></td>
 				<td>
-					<a>Rimuovi dal carrello</a>
+					<button class="minus" th:value="${item.libro.id}">-</button>
+				</td>
+				<td th:id="'quantity' + ${item.libro.id}" th:text="${item.quantita}"></td>
+				<td>
+					<button class="plus" th:value="${item.libro.id}">+</button>
+				</td>
+				<td>
+					<a th:href="@{/riservatautente/rimuovi(id=${item.libro.id})}" >Rimuovi dal carrello</a>
 				</td>
 	</table>
+	<h5 th:if="${carrello != null}" th:text="'Totale Carrello Euro ' + ${totale}" id="totaleCarrello"></h5>
+	
+	<a th:if="${carrello != null}" th:href="@{/riservatautente/invia}">Invia Ordine</a>
 	<script>
 		document.addEventListener("DOMContentLoaded", function(){
 			const pwd = document.getElementById("pwd");
@@ -51,5 +61,6 @@
 				pwd.type = "password";
 		}
 	</script>
+	<script th:src="@{javascript/carrello.js}"></script>
 </body>
 </html>
