@@ -8,27 +8,29 @@
 	<a th:href="@{/admindash}">Torna a Dashboard</a>
 	<table>
 		<tr th:each="libro : ${libri}">
-			<td></td>
+			<td>
+				<img th:src="@{${libro.copertina == null ? 'image/markerImage.png' : libro.copertina}}">
+			</td>
 			<td th:text="${libro.titolo}"></td>
 			<td th:text="${libro.prezzo}"></td>
 			<td th:text="${libro.categoria.descrizione}"></td>
 			<td th:text="${libro.autore.nome} + ' ' + ${libro.autore.cognome}"></td>
 			<td th:text="${libro.quantita}"></td>
-			<td><a>Modifica</a> <a>Elimina</a></td>
+			<td><a th:href="@{/adminlibri(id=${libro.id})}">Modifica</a> <a th:href="@{/adminlibri/elimina(id=${libro.id})}">Elimina</a></td>
 		</tr>
 	</table>
 	<hr>
 	<form action="/adminlibri" method="post" enctype="multipart/form-data">
-		<input type="text" name="titolo" required> <br> <input
-			type="number" step="any" name="prezzo" required> <br> <input
-			type="number" name="quantita" required> 
+		<input type="text" name="titolo" th:value="${libro.titolo}" required> <br> <input
+			type="number" step="any" name="prezzo" th:value="${libro.prezzo}" required> <br> <input
+			type="number" name="quantita" th:value="${libro.quantita}" required> 
 			<br> 
 			<select name="autore">
-			<option th:each="autore : ${autori}" th:text="${autore.nome} + ' ' + ${autore.cognome}" th:value="${autore.id}"></option>
+			<option th:each="autore : ${autori}" th:text="${autore.nome} + ' ' + ${autore.cognome}" th:value="${autore.id}" th:selected="${libro.autore != null && libro.autore.id == autore.id}"></option>
 		</select>
 			<br>
 			<select name="categoria">
-			<option th:each="categoria : ${categorie}" th:text="${categoria.descrizione}" th:value="${categoria.id}"></option>
+			<option th:each="categoria : ${categorie}" th:text="${categoria.descrizione}" th:value="${categoria.id}" th:selected="${libro.categoria != null && libro.categoria.id == categoria.id}"></option>
 			</select>
 			<br>
 			<input type="file" name="copertina">

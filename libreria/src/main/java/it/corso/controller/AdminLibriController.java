@@ -37,14 +37,15 @@ public class AdminLibriController {
 	private Libro libro;
 	
 	@GetMapping()
-	public String getPage(Model model) {
+	public String getPage(Model model, @RequestParam(name="id",required = false) Integer id) {
 		List<Libro> libri = libroService.getLibri();
 		List<Autore> autori = autoreService.getAutori();
 		List<Categoria> catogorie = categoriaService.getCategorie();
-		libro = new Libro(); //assume il valore in questa fase
+		libro = id == null ? new Libro() : libroService.getLibroById(id); //assume il valore in questa fase, se c'è un id viene recuperato il libro dal db
 		model.addAttribute("libri",libri);
 		model.addAttribute("autori",autori);
 		model.addAttribute("categorie",catogorie);
+		model.addAttribute("libro",libro); //ci permette in adminLibri.html di avere un riferimento al libro
 		return "admin-libri";
 	}
 	
@@ -60,6 +61,13 @@ public class AdminLibriController {
 		libroService.registraLibro(libro, titolo, prezzo, quantita, idAutore, idCategoria, copertina);
 		return "redirect:/adminlibri";
 	}
+	
+	@GetMapping("/elimina")
+	public String eliminaLibro(@RequestParam("id") int id) {
+		libroService.eliminaLibro(id);
+		return "redirect:/adminlibri";
+	}
+	
 	
 
 }

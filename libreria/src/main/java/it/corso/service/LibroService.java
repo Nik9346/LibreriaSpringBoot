@@ -12,4 +12,6 @@ public interface LibroService {
 	Libro getLibroById(int id);
 	
 	void registraLibro(Libro libro, String titolo, String prezzo, String quantita, int idAutore, int idCategoria, MultipartFile copertina);
+
+	void eliminaLibro(int id);
 }

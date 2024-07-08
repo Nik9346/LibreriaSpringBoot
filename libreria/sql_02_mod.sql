@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1:3310
--- Creato il: Lug 02, 2024 alle 22:24
--- Versione del server: 10.4.32-MariaDB
--- Versione PHP: 8.0.30
+-- Host: localhost:8889
+-- Creato il: Lug 08, 2024 alle 19:19
+-- Versione del server: 5.7.39
+-- Versione PHP: 7.4.33
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,8 +18,21 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `sql_02`
+-- Database: `sql_02_mod`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `admins`
+--
+
+CREATE TABLE `admins` (
+  `id` int(11) NOT NULL,
+  `username` varchar(50) NOT NULL,
+  `password` text NOT NULL,
+  `role` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -31,7 +44,7 @@ CREATE TABLE `autori` (
   `id` int(11) NOT NULL,
   `nome` varchar(50) NOT NULL,
   `cognome` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dump dei dati per la tabella `autori`
@@ -50,15 +63,16 @@ INSERT INTO `autori` (`id`, `nome`, `cognome`) VALUES
 CREATE TABLE `categorie` (
   `id` int(11) NOT NULL,
   `descrizione` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dump dei dati per la tabella `categorie`
 --
 
 INSERT INTO `categorie` (`id`, `descrizione`) VALUES
-(1, 'Romanzi'),
-(2, 'Thriller');
+(2, 'Thriller'),
+(3, 'Politica Italiana'),
+(5, 'Sviluppo');
 
 -- --------------------------------------------------------
 
@@ -69,23 +83,42 @@ INSERT INTO `categorie` (`id`, `descrizione`) VALUES
 CREATE TABLE `libri` (
   `id` int(11) NOT NULL,
   `titolo` varchar(50) NOT NULL,
-  `copertina` longtext DEFAULT NULL,
+  `copertina` longtext,
   `prezzo` double NOT NULL,
+  `quantita` int(11) DEFAULT NULL,
   `id_autore` int(11) DEFAULT NULL,
   `id_categoria` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dump dei dati per la tabella `libri`
 --
 
-INSERT INTO `libri` (`id`, `titolo`, `copertina`, `prezzo`, `id_autore`, `id_categoria`) VALUES
-(1, 'Libro Uno', NULL, 15.67, 1, 2),
-(2, 'Libro Due', NULL, 18.98, 2, 2),
-(3, 'Libro Tre', NULL, 17.56, 2, 1),
-(4, 'Libro Quattro', NULL, 20.67, 1, 1),
-(5, 'Libro Cinque', NULL, 20.25, 2, 1),
-(6, 'Libro sei', NULL, 18.54, 1, 2);
+INSERT INTO `libri` (`id`, `titolo`, `copertina`, `prezzo`, `quantita`, `id_autore`, `id_categoria`) VALUES
+(1, 'Libro Uno', NULL, 15.67, 2, 1, 2),
+(2, 'Libro Due', NULL, 18.98, 5, 2, 2),
+(6, 'Libro sei', NULL, 18.54, 5, 1, 2),
+(7, 'Libro Sette', NULL, 16.78, 3, 2, 2);
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `libri_ordinati`
+--
+
+CREATE TABLE `libri_ordinati` (
+  `id` int(11) NOT NULL,
+  `quantita` int(11) NOT NULL,
+  `id_libro` int(11) NOT NULL,
+  `id_ordine` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dump dei dati per la tabella `libri_ordinati`
+--
+
+INSERT INTO `libri_ordinati` (`id`, `quantita`, `id_libro`, `id_ordine`) VALUES
+(1, 2, 1, 3);
 
 -- --------------------------------------------------------
 
@@ -98,33 +131,15 @@ CREATE TABLE `ordini` (
   `data` date NOT NULL,
   `importo` double NOT NULL,
   `id_utente` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dump dei dati per la tabella `ordini`
 --
 
 INSERT INTO `ordini` (`id`, `data`, `importo`, `id_utente`) VALUES
-(1, '2024-06-02', 45.89, 1);
-
--- --------------------------------------------------------
-
---
--- Struttura della tabella `ordini_libri`
---
-
-CREATE TABLE `ordini_libri` (
-  `id_ordine` int(11) NOT NULL,
-  `id_libro` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dump dei dati per la tabella `ordini_libri`
---
-
-INSERT INTO `ordini_libri` (`id_ordine`, `id_libro`) VALUES
-(1, 2),
-(1, 4);
+(3, '2024-07-04', 92.51, 8),
+(4, '2024-07-04', 72.92999999999999, 8);
 
 -- --------------------------------------------------------
 
@@ -136,7 +151,7 @@ CREATE TABLE `profili` (
   `id` int(11) NOT NULL,
   `username` varchar(50) NOT NULL,
   `password` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dump dei dati per la tabella `profili`
@@ -146,7 +161,7 @@ INSERT INTO `profili` (`id`, `username`, `password`) VALUES
 (1, 'mario.rossi', '5678'),
 (3, 'laura.gialli', '123'),
 (5, 'GIANNO.PINO', 'ciao123!!A'),
-(8, 'gianni.verdi', 'Fuckerie2!');
+(8, 'gianni.verdi', 'Fuckerie27!');
 
 -- --------------------------------------------------------
 
@@ -159,7 +174,7 @@ CREATE TABLE `utenti` (
   `nome` varchar(50) NOT NULL,
   `cognome` varchar(50) NOT NULL,
   `id_profilo` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dump dei dati per la tabella `utenti`
@@ -169,11 +184,17 @@ INSERT INTO `utenti` (`id`, `nome`, `cognome`, `id_profilo`) VALUES
 (1, 'Mariuccio', 'Rossi', 1),
 (3, 'Laura', 'Gialli', 3),
 (5, 'gIANNI', 'poIN', 5),
-(8, 'Gianni', 'Verdi', 8);
+(8, 'Giannino', 'Verdi', 8);
 
 --
 -- Indici per le tabelle scaricate
 --
+
+--
+-- Indici per le tabelle `admins`
+--
+ALTER TABLE `admins`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indici per le tabelle `autori`
@@ -196,18 +217,19 @@ ALTER TABLE `libri`
   ADD KEY `categoria` (`id_categoria`);
 
 --
+-- Indici per le tabelle `libri_ordinati`
+--
+ALTER TABLE `libri_ordinati`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `libro_ordinato` (`id_libro`),
+  ADD KEY `ordine_libro` (`id_ordine`);
+
+--
 -- Indici per le tabelle `ordini`
 --
 ALTER TABLE `ordini`
   ADD PRIMARY KEY (`id`),
   ADD KEY `utente` (`id_utente`);
-
---
--- Indici per le tabelle `ordini_libri`
---
-ALTER TABLE `ordini_libri`
-  ADD KEY `ordine` (`id_ordine`),
-  ADD KEY `libro` (`id_libro`);
 
 --
 -- Indici per le tabelle `profili`
@@ -227,6 +249,12 @@ ALTER TABLE `utenti`
 --
 
 --
+-- AUTO_INCREMENT per la tabella `admins`
+--
+ALTER TABLE `admins`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT per la tabella `autori`
 --
 ALTER TABLE `autori`
@@ -236,31 +264,37 @@ ALTER TABLE `autori`
 -- AUTO_INCREMENT per la tabella `categorie`
 --
 ALTER TABLE `categorie`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT per la tabella `libri`
 --
 ALTER TABLE `libri`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT per la tabella `libri_ordinati`
+--
+ALTER TABLE `libri_ordinati`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT per la tabella `ordini`
 --
 ALTER TABLE `ordini`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT per la tabella `profili`
 --
 ALTER TABLE `profili`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT per la tabella `utenti`
 --
 ALTER TABLE `utenti`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- Limiti per le tabelle scaricate
@@ -274,17 +308,17 @@ ALTER TABLE `libri`
   ADD CONSTRAINT `categoria` FOREIGN KEY (`id_categoria`) REFERENCES `categorie` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
+-- Limiti per la tabella `libri_ordinati`
+--
+ALTER TABLE `libri_ordinati`
+  ADD CONSTRAINT `libro_ordinato` FOREIGN KEY (`id_libro`) REFERENCES `libri` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `ordine_libro` FOREIGN KEY (`id_ordine`) REFERENCES `ordini` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
 -- Limiti per la tabella `ordini`
 --
 ALTER TABLE `ordini`
   ADD CONSTRAINT `utente` FOREIGN KEY (`id_utente`) REFERENCES `utenti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Limiti per la tabella `ordini_libri`
---
-ALTER TABLE `ordini_libri`
-  ADD CONSTRAINT `libro` FOREIGN KEY (`id_libro`) REFERENCES `libri` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `ordine` FOREIGN KEY (`id_ordine`) REFERENCES `ordini` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Limiti per la tabella `utenti`
