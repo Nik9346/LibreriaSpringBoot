@@ -27,7 +27,7 @@ public class AdminServiceImpl implements AdminService {
 		
 		//import org.springframework.security.core.userdetails.User;
 		User admin = null;
-		if(adminOptional.isEmpty())
+		if(adminOptional.isEmpty()) //se nella scatola non c'è nessun dato lancia un'eccezione e blocca tutto
 			throw new UsernameNotFoundException("Autenticazione Fallita");
 		Admin trovato = adminOptional.get(); //il metodo get tira fuori il contenuto dell'optional
 		//impostiamo un set di Grantedauthority
